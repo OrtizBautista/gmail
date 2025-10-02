@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cuida a Gmail 🐶</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+</head>
+<body>
+  <h1>🐾 Cuida a Gmail 🐾</h1>
+
+  <!-- Barras de estado -->
+  <div id="stats">
+    <div class="stat">
+      <span>🍖</span>
+      <div class="barra"><div id="hambre-barra" class="relleno"></div></div>
+    </div>
+    <div class="stat">
+      <span>⚡</span>
+      <div class="barra"><div id="energia-barra" class="relleno"></div></div>
+    </div>
+    <div class="stat">
+      <span>🧼</span>
+      <div class="barra"><div id="higiene-barra" class="relleno"></div></div>
+    </div>
+    <div class="stat">
+      <span>🎾</span>
+      <div class="barra"><div id="diversion-barra" class="relleno"></div></div>
+    </div>
+  </div>
+
+  <!-- Selector de escenario -->
+  <div id="escenarios">
+    <button onclick="cambiarEscenario('comedor')">Comedor</button>
+    <button onclick="cambiarEscenario('bano')">Baño</button>
+    <button onclick="cambiarEscenario('habitacion')">Habitación</button>
+  </div>
+
+  <!-- Contenedor de escenarios -->
+  <div id="escenario-container">
+    <!-- Capa de oscuridad -->
+    <div id="oscuridad"></div>
+
+    <!-- Imagen del perrito -->
+    <div id="pet-container">
+      <img id="gmail" src="./assets/gmail_feliz.png" alt="Gmail el perrito">
+    </div>
+
+    <!-- Objetos del juego -->
+    <div id="items-container">
+      <!-- Comedor -->
+      <img id="comida" src="./assets/comida.png" draggable="true" alt="Comida">
+      <!-- Baño -->
+      <img id="jabon" src="./assets/jabon.png" draggable="true" alt="Jabón">
+      <img id="trapo" src="./assets/trapo.png" draggable="true" alt="Trapo">
+      <!-- Habitación -->
+      <img id="lampara" src="./assets/lampara.png" alt="Lámpara" class="objeto-escenario">
+    </div>
+  </div>
+
+  <!-- Botones de acciones -->
+  <div id="actions">
+    <button onclick="alimentar()">Dar de comer</button>
+    <button onclick="dormir()">Dormir</button>
+    <button onclick="banar()">Bañar</button>
+    <button onclick="jugar()">Jugar</button>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
