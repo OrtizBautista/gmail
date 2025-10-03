@@ -60,11 +60,11 @@ setInterval(() => {
   } else {
     hambre = Math.max(0, hambre - 0.02);
     energia = Math.max(0, energia - 0.015);
-    higiene = Math.max(0, higiene - 0.006);
-    diversion = Math.max(0, diversion - 0.012);
+    higiene = Math.max(0, higiene - 0.03);
+    diversion = Math.max(0, diversion - 0.01);
   }
   actualizar();
-}, 5000);
+}, 1000);
 
 // =====================
 // Función para actualizar barras y Gmail
@@ -90,7 +90,7 @@ function actualizar() {
 // =====================
 function actualizarGmail() {
   if (escenarioActual === "habitacion" && !lamparaEncendida) {
-    petImg.src = "./assets/gmail_sueno.png";
+    petImg.src = "./assets/gmail_dormido.jpg";
     petImg.style.width = "150px";
     oscuridad.style.opacity = 1;
     return;
@@ -159,9 +159,15 @@ function quitarEspuma() { petImg.style.filter = "none"; higiene = Math.min(100, 
 // =====================
 // Sistema de huesitos
 // =====================
+let ultimaRecompensa = Date.now();
+
 function darRecompensa() {
+  let ahora = Date.now();
   if (hambre >= 80 && energia >= 80 && higiene >= 80 && diversion >= 80) {
-    huesitos += 5;
+    if (ahora - ultimaRecompensa >= 30000) { // cada 30 segundos
+      huesitos += 5;
+      ultimaRecompensa = ahora;
+    }
   }
 }
 
@@ -227,6 +233,67 @@ lampara.addEventListener("click", () => {
   lampara.src = lamparaEncendida ? "./assets/lampara.png" : "./assets/lampara_off.png";
   actualizar();
 });
+// =====================
+// Drag & Drop para celular (touch events)
+// =====================
+function enableTouchDrag(item, onDropCallback) {
+  let touchItem = null;
+
+  item.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    touchItem = item.cloneNode(true); // clonamos para arrastrar
+    touchItem.style.position = "absolute";
+    touchItem.style.pointerEvents = "none";
+    touchItem.style.width = item.offsetWidth + "px";
+    touchItem.style.zIndex = 9999;
+    document.body.appendChild(touchItem);
+  });
+
+  item.addEventListener("touchmove", (e) => {
+    if (!touchItem) return;
+    let touch = e.touches[0];
+    touchItem.style.left = (touch.pageX - touchItem.offsetWidth / 2) + "px";
+    touchItem.style.top = (touch.pageY - touchItem.offsetHeight / 2) + "px";
+  });
+
+  item.addEventListener("touchend", (e) => {
+    if (!touchItem) return;
+
+    // posición final
+    let rectPet = petImg.getBoundingClientRect();
+    let rectItem = touchItem.getBoundingClientRect();
+
+    // detectar colisión con el perrito
+    if (
+      rectItem.left < rectPet.right &&
+      rectItem.right > rectPet.left &&
+      rectItem.top < rectPet.bottom &&
+      rectItem.bottom > rectPet.top
+    ) {
+      onDropCallback(); // ejecutar acción
+    }
+
+    touchItem.remove();
+    touchItem = null;
+  });
+}
+
+// Activar drag touch para cada objeto
+enableTouchDrag(comida, () => {
+  if (escenarioActual === "comedor") {
+    hambre = Math.min(100, hambre + 20);
+    actualizar();
+  }
+});
+
+enableTouchDrag(jabon, () => {
+  if (escenarioActual === "bano") mostrarEspuma();
+});
+
+enableTouchDrag(trapo, () => {
+  if (escenarioActual === "bano") quitarEspuma();
+});
+
 
 // =====================
 // Inicializar
